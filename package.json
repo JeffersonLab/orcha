@@ -1,7 +1,9 @@
 {
-  "name": "~TODO~",
+  "name": "orcha",
   "version": "0.0.1",
   "scripts": {
+    "workaround": "node src/lib/vite-workaround.js",
+    "prepare": "smui-theme compile build/smui.css -i src/theme",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",
@@ -20,6 +22,7 @@
     "eslint-plugin-svelte3": "^3.2.0",
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
+    "smui-theme": "^4.2.0",
     "svelte": "^3.34.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
@@ -30,6 +33,7 @@
   "dependencies": {
     "@fontsource/fira-mono": "^4.2.2",
     "@lukeed/uuid": "^2.0.0",
+    "@smui/data-table": "^4.2.0",
     "cookie": "^0.4.1",
     "kafkajs": "^1.15.0"
   }
