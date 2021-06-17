@@ -33,3 +33,7 @@
 <script>
     import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 </script>
+
+<style>
+    @import '../../node_modules/svelte-material-ui/bare';
+</style>
