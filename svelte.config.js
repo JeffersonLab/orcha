@@ -17,6 +17,9 @@ const config = {
 				noExternal: Object.keys(pkg.dependencies || {}).filter((pkgName) =>
 					pkgName.startsWith("@smui")
 				),
+			},
+			optimizeDeps: {
+				include: ['kafkajs']
 			}
 		})
 	}
