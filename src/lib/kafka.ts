@@ -16,6 +16,10 @@ console.log('BOOTSTRAP_SERVERS: ', BOOTSTRAP_SERVERS)
 const kafka = new Kafka({
     clientId: 'orcha',
     brokers: BOOTSTRAP_SERVERS,
+    retry: {
+        retries: 0,
+        restartOnFailure: async () => false
+    },
     ssl,
     sasl
 })
