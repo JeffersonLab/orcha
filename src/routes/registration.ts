@@ -30,7 +30,9 @@ export async function get() {
     })
 
     await consumer.run({
+        autoCommit: false,
         eachMessage: async ({ topic, partition, message }) => {
+
             console.log('Received message', {
                 topic,
                 partition,
@@ -39,6 +41,8 @@ export async function get() {
             })
         }
     })
+
+    //await consumer.seek({ topic: 'registered-alarms', partition: 0, offset: 1 })
 
     return {
         body: listRegistration()
