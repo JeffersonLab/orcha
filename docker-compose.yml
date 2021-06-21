@@ -21,6 +21,7 @@ services:
       KAFKA_HOME: "/kafka"
       BOOTSTRAP_SERVER: "kafka:9092"
       ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      ADVERTISED_HOST_NAME: "${ADVERTISED_HOST_NAME}"
 
   registry:
     image: confluentinc/cp-schema-registry:6.0.2
