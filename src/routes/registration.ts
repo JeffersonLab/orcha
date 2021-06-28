@@ -1,4 +1,5 @@
 import kafka from '$lib/kafka'
+import { registry } from '$lib/kafka'
 
 const listRegistration = () => {
     return [{
@@ -6,18 +7,10 @@ const listRegistration = () => {
     }]
 }
 
-let consumer;
 
-get().catch(async error => {
-    console.error(error)
-    try {
-        await consumer.disconnect()
-    } catch (e) {
-        console.error('Failed to gracefully disconnect consumer', e)
-    }
-})
+ const registrations = async () => {
+    let consumer;
 
-export async function get() {
     consumer = kafka.consumer({
         groupId: 'orcha'
     })
@@ -33,16 +26,57 @@ export async function get() {
         autoCommit: false,
         eachMessage: async ({ topic, partition, message }) => {
 
+            const decodedKey = message.key.toString()
+            const decodedValue = await registry.decode(message.value)
+
             console.log('Received message', {
                 topic,
                 partition,
-                key: message.key.toString(),
-                value: message.value.toString()
+                key: decodedKey,
+                value: decodedValue
             })
         }
     })
 
-    //await consumer.seek({ topic: 'registered-alarms', partition: 0, offset: 1 })
+    await consumer.seek({ topic: 'registered-alarms', partition: 0, offset: 1 })
+
+
+     const errorTypes = ['unhandledRejection', 'uncaughtException']
+     const signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2']
+
+     errorTypes.map(type => {
+         process.on(type, async e => {
+             try {
+                 console.log(`process.on ${type}`)
+                 console.error(e)
+                 await consumer.disconnect()
+                 process.exit(0)
+             } catch (_) {
+                 process.exit(1)
+             }
+         })
+     })
+
+     signalTraps.map(type => {
+         process.once(type, async () => {
+             try {
+                 await consumer.disconnect()
+             } finally {
+                 process.kill(process.pid, type)
+             }
+         })
+     })
+
+
+
+    console.log('exiting run method')
+}
+
+export async function get() {
+    console.log('start of get method')
+    //await registrations().catch(e => console.error(`[orcha] ${e.message}`, e))
+
+    console.log('end of get method')
 
     return {
         body: listRegistration()
